@@ -36,3 +36,6 @@ GROUP BY
     d.nombres,
     d.apellidos,
     e.nombre;
+
+
+

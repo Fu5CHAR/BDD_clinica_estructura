@@ -47,6 +47,7 @@ END$$
 -- =========================================
 -- PROCEDIMIENTO: Registrar cita
 -- =========================================
+
 CREATE PROCEDURE sp_registrar_cita (
     IN p_paciente_id INT,
     IN p_doctor_id INT,
@@ -74,18 +75,56 @@ BEGIN
         SET MESSAGE_TEXT = 'El doctor no existe';
     END IF;
 
-    -- Insertar cita
+    -- Insertar cita como AGENDADA
     INSERT INTO citas (
         fecha_hora,
         diagnostico,
         fk_paciente_id,
-        fk_doctor_id
+        fk_doctor_id,
+        estado
     ) VALUES (
         p_fecha,
         p_diagnostico,
         p_paciente_id,
-        p_doctor_id
+        p_doctor_id,
+        'AGENDADA'
     );
 END$$
 
+-- =========================================
+-- PROCEDIMIENTO: cancelar cita
+-- =========================================
+
+CREATE PROCEDURE sp_cancelar_cita (
+    IN p_cita_id INT
+)
+BEGIN
+    DECLARE v_estado_actual VARCHAR(20);
+
+    -- Verificar existencia de la cita
+    SELECT estado
+    INTO v_estado_actual
+    FROM citas
+    WHERE cita_id = p_cita_id;
+
+    IF v_estado_actual IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'La cita no existe';
+    END IF;
+
+    -- No permitir cancelar citas ya atendidas
+    IF v_estado_actual = 'ATENDIDA' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No se puede cancelar una cita ya atendida';
+    END IF;
+
+    -- Cancelar cita
+    UPDATE citas
+    SET estado = 'CANCELADA'
+    WHERE cita_id = p_cita_id;
+END$$
+
 DELIMITER ;
+
+
+

@@ -67,27 +67,27 @@ END$$
 -- FUNCIÓN "TABULAR" SIMULADA
 -- Guarda el ID del paciente en una variable
 -- =========================================
-CREATE FUNCTION fn_historial_citas(p_paciente_id INT)
-RETURNS INT
-DETERMINISTIC
-BEGIN
-    SET @paciente_historial := p_paciente_id;
-    RETURN 1;
-END$$
+##CREATE FUNCTION fn_historial_citas(p_paciente_id INT)
+##RETURNS INT
+##DETERMINISTIC
+##BEGIN
+  ##  SET @paciente_historial := p_paciente_id;
+   ## RETURN 1;
+##END$$
 
 DELIMITER ;
 
 -- =========================================
 -- VISTA TABULAR ASOCIADA A LA FUNCIÓN
 -- =========================================
-CREATE OR REPLACE VIEW v_historial_citas AS
-SELECT
-    c.cita_id,
-    c.fecha_hora AS fecha_cita,
-    c.diagnostico,
-    CONCAT(d.nombres, ' ', d.apellidos) AS doctor,
-    e.nombre AS especialidad
-FROM citas c
-JOIN doctores d ON c.fk_doctor_id = d.doctor_id
-JOIN especialidades e ON d.fk_especialidad_id = e.especialidad_id
-WHERE c.fk_paciente_id = @paciente_historial;
+##CREATE OR REPLACE VIEW v_historial_citas AS
+##SELECT
+  ##  c.cita_id,
+   ## c.fecha_hora AS fecha_cita,
+   ## c.diagnostico,
+   ## CONCAT(d.nombres, ' ', d.apellidos) AS doctor,
+    ##e.nombre AS especialidad
+##FROM citas c
+##JOIN doctores d ON c.fk_doctor_id = d.doctor_id
+##JOIN especialidades e ON d.fk_especialidad_id = e.especialidad_id
+##WHERE c.fk_paciente_id = @paciente_historial;

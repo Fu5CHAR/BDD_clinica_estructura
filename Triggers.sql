@@ -5,17 +5,14 @@ USE Proyecto2025B_2b;
 -- =========================================
 DELIMITER $$
 
--- ========================
--- DOCTORES - INSERT
--- ========================
-CREATE TRIGGER trg_doctores_insert_nombre
+CREATE OR REPLACE TRIGGER trg_doctores_insert_nombre
 BEFORE INSERT ON doctores
 FOR EACH ROW
 BEGIN
-    IF NEW.nombres REGEXP '[^A-Za-z ]'
-       OR NEW.apellidos REGEXP '[^A-Za-z ]' THEN
+    IF NEW.nombres REGEXP '[^A-Za-zÁÉÍÓÚáéíóúÑñ ]'
+       OR NEW.apellidos REGEXP '[^A-Za-zÁÉÍÓÚáéíóúÑñ ]' THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Solo se permiten letras y espacios en nombres y apellidos';
+        SET MESSAGE_TEXT = 'Solo se permiten letras del español y espacios en nombres y apellidos';
     END IF;
 
     SET NEW.nombres   = fn_formatear_nombre(NEW.nombres);
@@ -25,31 +22,31 @@ END$$
 -- ========================
 -- DOCTORES - UPDATE
 -- ========================
-CREATE TRIGGER trg_doctores_update_nombre
+CREATE OR REPLACE TRIGGER trg_doctores_update_nombre
 BEFORE UPDATE ON doctores
 FOR EACH ROW
 BEGIN
-    IF NEW.nombres REGEXP '[^A-Za-z ]'
-       OR NEW.apellidos REGEXP '[^A-Za-z ]' THEN
+    IF NEW.nombres REGEXP '[^A-Za-zÁÉÍÓÚáéíóúÑñ ]'
+       OR NEW.apellidos REGEXP '[^A-Za-zÁÉÍÓÚáéíóúÑñ ]' THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Solo se permiten letras y espacios en nombres y apellidos';
+        SET MESSAGE_TEXT = 'Solo se permiten letras del español y espacios en nombres y apellidos';
     END IF;
 
     SET NEW.nombres   = fn_formatear_nombre(NEW.nombres);
     SET NEW.apellidos = fn_formatear_nombre(NEW.apellidos);
-END$$
+END;
 
 -- ========================
 -- PACIENTES - INSERT
 -- ========================
-CREATE TRIGGER trg_pacientes_insert_nombre
+CREATE OR REPLACE TRIGGER trg_pacientes_insert_nombre
 BEFORE INSERT ON pacientes
 FOR EACH ROW
 BEGIN
-    IF NEW.nombres REGEXP '[^A-Za-z ]'
-       OR NEW.apellidos REGEXP '[^A-Za-z ]' THEN
+    IF NEW.nombres REGEXP '[^A-Za-zÁÉÍÓÚáéíóúÑñ ]'
+       OR NEW.apellidos REGEXP '[^A-Za-zÁÉÍÓÚáéíóúÑñ ]' THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Solo se permiten letras y espacios en nombres y apellidos';
+        SET MESSAGE_TEXT = 'Solo se permiten letras del español y espacios en nombres y apellidos';
     END IF;
 
     SET NEW.nombres   = fn_formatear_nombre(NEW.nombres);
@@ -59,19 +56,20 @@ END$$
 -- ========================
 -- PACIENTES - UPDATE
 -- ========================
-CREATE TRIGGER trg_pacientes_update_nombre
+CREATE OR REPLACE TRIGGER trg_pacientes_update_nombre
 BEFORE UPDATE ON pacientes
 FOR EACH ROW
 BEGIN
-    IF NEW.nombres REGEXP '[^A-Za-z ]'
-       OR NEW.apellidos REGEXP '[^A-Za-z ]' THEN
+    IF NEW.nombres REGEXP '[^A-Za-zÁÉÍÓÚáéíóúÑñ ]'
+       OR NEW.apellidos REGEXP '[^A-Za-zÁÉÍÓÚáéíóúÑñ ]' THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Solo se permiten letras y espacios en nombres y apellidos';
+        SET MESSAGE_TEXT = 'Solo se permiten letras del español y espacios en nombres y apellidos';
     END IF;
 
     SET NEW.nombres   = fn_formatear_nombre(NEW.nombres);
     SET NEW.apellidos = fn_formatear_nombre(NEW.apellidos);
 END$$
+
 
 -- =========================================
 -- EVITAR CITAS EN FECHAS PASADAS
@@ -89,6 +87,7 @@ END$$
 -- =========================================
 -- EVITAR SOLAPAMIENTO DE CITAS (DOCTOR)
 -- =========================================
+
 CREATE TRIGGER trg_citas_doctor_solapadas
 BEFORE INSERT ON citas
 FOR EACH ROW
@@ -107,6 +106,7 @@ END$$
 -- =========================================
 -- EVITAR SOLAPAMIENTO DE CITAS (PACIENTE)
 -- =========================================
+
 CREATE TRIGGER trg_citas_paciente_solapadas
 BEFORE INSERT ON citas
 FOR EACH ROW

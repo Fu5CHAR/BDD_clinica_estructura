@@ -1,3 +1,4 @@
+CREATE DATABASE Proyecto2025B_2b;
 USE Proyecto2025B_2b;
 
 -- =========================================
@@ -49,6 +50,11 @@ CREATE TABLE citas (
     FOREIGN KEY (fk_doctor_id)
         REFERENCES doctores(doctor_id)
 );
+
+ALTER TABLE citas
+ADD estado ENUM('AGENDADA', 'ATENDIDA', 'CANCELADA')
+NOT NULL
+DEFAULT 'AGENDADA';
 
 -- =========================================
 -- TABLA: prescripciones
